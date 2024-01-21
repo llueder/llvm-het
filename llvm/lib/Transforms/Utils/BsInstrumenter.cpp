@@ -6,22 +6,23 @@
 
 #include <fstream>
 #include <string>
-#include <vector>
-#include <utility>
 
 using namespace llvm;
 using namespace std; // against llvm coding standard
 
-using callSiteInfo = pair<string, string>;
-
 static cl::opt<string> InputFilename("switch-file", cl::desc("Specify input filename for bs-instrument"), cl::value_desc("filename"));
 
-vector<callSiteInfo> readFile(string fname) {
-    if(fname.compare("") == 0) {
+BsInstrumenterPass::BsInstrumenterPass() : PassInfoMixin<BsInstrumenterPass>() {
+    if(InputFilename.compare("") == 0) {
         errs() << "bs-instrument pass is used, but no switch-file is given!\n";
         errs() << "the error reporting is ugly but I do not find a better way.\n";
         report_fatal_error("");
     }
+    callSitesToInstrument = readFile(InputFilename);
+    // errs() << "using file " << InputFilename << "\n";
+}
+
+vector<BsInstrumenterPass::callSiteInfo> BsInstrumenterPass::readFile(string fname) {
     vector<callSiteInfo> infos;
     std::ifstream file(fname);
     std::string line;
@@ -38,15 +39,13 @@ vector<callSiteInfo> readFile(string fname) {
 
 bool BsInstrumenterPass::requiresSwitching(Function *F, CallBase *call) const {
     // errs() << "check " << call->getFunction()->getName() << " for call to " << F->getName() << "\n";
-    const auto infos = readFile(InputFilename);
-    // errs() << "using file " << InputFilename << "\n";
-    for(const auto& info : infos) {
-        if(info.first.compare(call->getFunction()->getName().data()) == 0 &&
-               info.second.compare(F->getName().data()) == 0) {
-            // errs() << "insert at call from " << info.first << " to " << info.second << "\n";// endl;
+    for(const auto& callSite : callSitesToInstrument) {
+        if(callSite.first.compare(call->getFunction()->getName().data()) == 0 &&
+               callSite.second.compare(F->getName().data()) == 0) {
+            // errs() << "insert at call from " << callSite.first << " to " << callSite.second << "\n";// endl;
             return true;
         } else {
-            // errs() << "not insert at call from " << info.first << " to " << info.second << "\n";//endl;
+            // errs() << "not insert at call from " << callSite.first << " to " << callSite.second << "\n";//endl;
         }
     }
     return false;
