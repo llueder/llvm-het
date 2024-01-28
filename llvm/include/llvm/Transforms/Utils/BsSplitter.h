@@ -17,8 +17,18 @@ public:
     static bool isRequired() { return true; }
 
 private:
-    static std::vector<std::string> readFile(std::string fname);
-    std::vector<std::string> functionsToVariant;
+    class VariantingInfo {
+    private:
+        std::vector<std::string> functions;
+        bool variantAll = false;
+    public:
+        void addFunction(std::string name);
+        void setAll();
+
+        bool shallBeVarianted(std::string functionName);
+    };
+
+    static VariantingInfo readFile(std::string fname, std::string moduleName);
 
     using variantType_t = enum {common, A, B};
     variantType_t variantType;
