@@ -228,6 +228,7 @@
 #include "llvm/Transforms/Utils/AddDiscriminators.h"
 #include "llvm/Transforms/Utils/AssumeBundleBuilder.h"
 #include "llvm/Transforms/Utils/BreakCriticalEdges.h"
+#include "llvm/Transforms/Utils/BsGlobal.h"
 #include "llvm/Transforms/Utils/BsInstrumenter.h"
 #include "llvm/Transforms/Utils/BsSplitter.h"
 #include "llvm/Transforms/Utils/CanonicalizeAliases.h"
