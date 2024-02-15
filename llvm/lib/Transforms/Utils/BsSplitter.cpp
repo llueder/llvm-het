@@ -59,7 +59,8 @@ BsSplitterPass::VariantingInfo BsSplitterPass::readFile(string fname, string mod
         const auto pos = line.find(":");
         if(string::npos != pos) { // module line
             const string newModuleName = line.substr(0, pos);
-            listen = moduleName.compare(newModuleName) == 0;
+            listen = (moduleName.compare(newModuleName) == 0)
+                || (newModuleName.compare("*") == 0);
             // errs() << newModuleName << ", listening? " << listen << "\n";
         } else if(listen) { // function line
             if(line.compare("*") == 0) {
