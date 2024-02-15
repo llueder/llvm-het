@@ -95,9 +95,7 @@ PreservedAnalyses BsSplitterPass::run(Module &M, ModuleAnalysisManager &AM) {
             // errs() << "It is a varianted function. ";
         // }
 
-        const bool isVariantedFuncDev = isDef && isVariantedFunction;
-
-        if(isVariantedFuncDev ^ (variantType != variantType_t::common)) {
+        if(isDef && (isVariantedFunction ^ (variantType != variantType_t::common))) {
             // errs() << "I remove it.";
             functionsToDelete.push_back(&F);
         }
