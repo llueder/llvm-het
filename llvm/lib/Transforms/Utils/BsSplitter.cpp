@@ -31,12 +31,6 @@ bool BsSplitterPass::VariantingInfo::shallBeVarianted(std::string functionName) 
 
 
 BsSplitterPass::BsSplitterPass() : PassInfoMixin<BsSplitterPass>() {
-    if(InputFilename.compare("") == 0) {
-        errs() << "bs-split pass is used, but no split-file is given!\n";
-        errs() << "the error reporting is ugly but I do not find a better way.\n";
-        report_fatal_error("");
-    }
-
     if(VariantName.compare("common") == 0) {
         variantType = variantType_t::common;
     } else if(VariantName.compare("A") == 0) {
@@ -53,6 +47,13 @@ BsSplitterPass::BsSplitterPass() : PassInfoMixin<BsSplitterPass>() {
 BsSplitterPass::VariantingInfo BsSplitterPass::readFile(string fname, string moduleName) {
     VariantingInfo info;
     ifstream file(fname);
+    if(!file.is_open()) {
+        errs() << "Given variant-file does not exist or none given!\n";
+        errs() << "I will variant all functions.\n";
+        info.setAll();
+        return info;
+    }
+
     string line;
     bool listen = false;
     while(getline(file, line)) {
