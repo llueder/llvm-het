@@ -19,16 +19,7 @@ Two problems:
    potentially not a desirable feature and will be changed in the linker.
 */
 
-static cl::opt<string> workingModeInput("mode", cl::desc("Specify working mode"), cl::value_desc("keep"));
-
 BsGlobalPass::BsGlobalPass() : PassInfoMixin<BsGlobalPass>() {
-    if(workingModeInput.compare("keep") == 0) {
-        workingMode = workingMode_t::keep;
-    } else {
-        errs() << "bs-global pass is used, but no mode or invalid mode is given!\n";
-        errs() << "the error reporting is ugly but I do not find a better way.\n";
-        report_fatal_error("");
-    }
 }
 
 PreservedAnalyses BsGlobalPass::run(Module &M, ModuleAnalysisManager &AM) {
@@ -36,11 +27,8 @@ PreservedAnalyses BsGlobalPass::run(Module &M, ModuleAnalysisManager &AM) {
     for(GlobalVariable& GV : M.globals()) {
         if(GV.hasInternalLinkage()) {
             errs() << GV << " is internal\n";
-            if(workingMode == workingMode_t::keep) {
-                GV.setLinkage(GlobalValue::LinkageTypes::ExternalLinkage);
-                GV.setDSOLocal(false);
-            } else {
-            }
+            GV.setLinkage(GlobalValue::LinkageTypes::ExternalLinkage);
+            GV.setDSOLocal(false);
         }
     }
     for(GlobalVariable* GV : variablesToDelete) {

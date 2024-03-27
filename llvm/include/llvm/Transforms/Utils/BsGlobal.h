@@ -16,8 +16,6 @@ public:
     static bool isRequired() { return true; }
 
 private:
-    using workingMode_t = enum {keep};
-    workingMode_t workingMode;
 };
 
 } /* namespace llvm */
