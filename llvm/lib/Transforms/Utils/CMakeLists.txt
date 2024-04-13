@@ -5,6 +5,7 @@ add_llvm_component_library(LLVMTransformUtils
   AssumeBundleBuilder.cpp
   BasicBlockUtils.cpp
   BreakCriticalEdges.cpp
+  BsDispatching.cpp
   BsGlobal.cpp
   BsInstrumenter.cpp
   BsSplitter.cpp

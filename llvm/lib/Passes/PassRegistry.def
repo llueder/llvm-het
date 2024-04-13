@@ -128,7 +128,8 @@ MODULE_PASS("memprof-module", ModuleMemProfilerPass())
 MODULE_PASS("poison-checking", PoisonCheckingPass())
 MODULE_PASS("pseudo-probe-update", PseudoProbeUpdatePass())
 MODULE_PASS("bs-global", BsGlobalPass())
-MODULE_PASS("bs-split", BsSplitterPass())
+//MODULE_PASS("bs-split", BsSplitterPass())
+MODULE_PASS("bs-dispatch", BsDispatchingPass())
 #undef MODULE_PASS
 
 #ifndef MODULE_PASS_WITH_PARAMS
