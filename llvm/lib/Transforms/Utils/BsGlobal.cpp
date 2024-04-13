@@ -26,7 +26,7 @@ PreservedAnalyses BsGlobalPass::run(Module &M, ModuleAnalysisManager &AM) {
     vector<GlobalVariable*> variablesToDelete;
     for(GlobalVariable& GV : M.globals()) {
         if(GV.hasInternalLinkage()) {
-            errs() << GV << " is internal\n";
+            // errs() << GV << " is internal\n";
             GV.setLinkage(GlobalValue::LinkageTypes::ExternalLinkage);
             GV.setDSOLocal(false);
         }
