@@ -92,6 +92,8 @@ bool HetDispatchingPass::endsWith(const string& str, const string& end) {
 PreservedAnalyses HetDispatchingPass::run(Module &M, ModuleAnalysisManager &AM) {
     VariantingInfo info = readFile(InputFilename, getModuleName(M));
 
+    GlobalVariable* current_variant = nullptr;
+
     vector<Function*> functionsToDelete;
     for(Function& F : M) {
 
@@ -168,7 +170,10 @@ PreservedAnalyses HetDispatchingPass::run(Module &M, ModuleAnalysisManager &AM) 
                 IRBuilder<> builder(bb_decider);
                 FunctionCallee checkAndSwitch = M.getOrInsertFunction("check_and_switch", Type::getVoidTy(context));
                 builder.CreateCall(checkAndSwitch);
-                Constant* current_variant = M.getOrInsertGlobal("current_variant", Type::getInt64Ty(context));
+                if(current_variant == nullptr) {
+                    Type* type = Type::getInt64Ty(context);
+                    current_variant = new GlobalVariable(M, type, false, GlobalValue::LinkageTypes::ExternalLinkage, nullptr, "current_variant", nullptr, GlobalValue::ThreadLocalMode::GeneralDynamicTLSModel, nullopt, true);
+                }
                 Constant* variant_A = M.getOrInsertGlobal("variant_A", Type::getInt64Ty(context));
                 auto load_cur = builder.CreateLoad(Type::getInt64Ty(context), current_variant);
                 auto load_A = builder.CreateLoad(Type::getInt64Ty(context), variant_A);
