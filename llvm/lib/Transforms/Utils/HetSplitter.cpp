@@ -1,4 +1,4 @@
-#include "llvm/Transforms/Utils/BsSplitter.h"
+#include "llvm/Transforms/Utils/HetSplitter.h"
 
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/Support/CommandLine.h"
@@ -12,25 +12,25 @@
 using namespace llvm;
 using namespace std; // against llvm coding standard
 
-static cl::opt<string> InputFilename("variant-file", cl::desc("Specify input filename for bs-splitter"), cl::value_desc("filename"));
+static cl::opt<string> InputFilename("variant-file", cl::desc("Specify input filename for het-splitter"), cl::value_desc("filename"));
 static cl::opt<string> VariantName("variant", cl::desc("Specify variant to generate"), cl::value_desc("common, A, B"));
 
 
-void BsSplitterPass::VariantingInfo::addFunction(std::string name) {
+void HetSplitterPass::VariantingInfo::addFunction(std::string name) {
     functions.push_back(name);
 }
 
-void BsSplitterPass::VariantingInfo::setAll() {
+void HetSplitterPass::VariantingInfo::setAll() {
     variantAll = true;
 }
 
-bool BsSplitterPass::VariantingInfo::shallBeVarianted(std::string functionName) {
+bool HetSplitterPass::VariantingInfo::shallBeVarianted(std::string functionName) {
     return variantAll || any_of(functions.begin(), functions.end(),
                 [&](string funcName){return funcName.compare(functionName) == 0;});
 }
 
 
-BsSplitterPass::BsSplitterPass() : PassInfoMixin<BsSplitterPass>() {
+HetSplitterPass::HetSplitterPass() : PassInfoMixin<HetSplitterPass>() {
     if(VariantName.compare("common") == 0) {
         variantType = variantType_t::common;
     } else if(VariantName.compare("A") == 0) {
@@ -38,13 +38,13 @@ BsSplitterPass::BsSplitterPass() : PassInfoMixin<BsSplitterPass>() {
     } else if(VariantName.compare("B") == 0) {
         variantType = variantType_t::B;
     } else {
-        errs() << "bs-split pass is used, but no split-variant or invalid value is given!\n";
+        errs() << "het-split pass is used, but no split-variant or invalid value is given!\n";
         errs() << "the error reporting is ugly but I do not find a better way.\n";
         report_fatal_error("");
     }
 }
 
-BsSplitterPass::VariantingInfo BsSplitterPass::readFile(string fname, string moduleName) {
+HetSplitterPass::VariantingInfo HetSplitterPass::readFile(string fname, string moduleName) {
     VariantingInfo info;
     ifstream file(fname);
     if(!file.is_open()) {
@@ -81,7 +81,7 @@ string getModuleName(const Module &M) {
     return p.stem();
 }
 
-PreservedAnalyses BsSplitterPass::run(Module &M, ModuleAnalysisManager &AM) {
+PreservedAnalyses HetSplitterPass::run(Module &M, ModuleAnalysisManager &AM) {
     VariantingInfo info = readFile(InputFilename, getModuleName(M));
 
     vector<Function*> functionsToDelete;

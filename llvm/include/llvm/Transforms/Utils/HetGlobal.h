@@ -1,5 +1,5 @@
-#ifndef LLVM_TRANSFORMS_BSGLOBAL_H
-#define LLVM_TRANSFORMS_BSGLOBAL_H
+#ifndef LLVM_TRANSFORMS_HETGLOBAL_H
+#define LLVM_TRANSFORMS_HETGLOBAL_H
 
 #include <vector>
 
@@ -8,9 +8,9 @@
 
 namespace llvm {
 
-class BsGlobalPass : public PassInfoMixin<BsGlobalPass> {
+class HetGlobalPass : public PassInfoMixin<HetGlobalPass> {
 public:
-    BsGlobalPass();
+    HetGlobalPass();
     PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
 
     static bool isRequired() { return true; }
@@ -20,4 +20,4 @@ private:
 
 } /* namespace llvm */
 
-#endif /* LLVM_TRANSFORMS_BSGLOBAL_H */
+#endif /* LLVM_TRANSFORMS_HETGLOBAL_H */

@@ -127,9 +127,9 @@ MODULE_PASS("sanmd-module", SanitizerBinaryMetadataPass())
 MODULE_PASS("memprof-module", ModuleMemProfilerPass())
 MODULE_PASS("poison-checking", PoisonCheckingPass())
 MODULE_PASS("pseudo-probe-update", PseudoProbeUpdatePass())
-MODULE_PASS("bs-global", BsGlobalPass())
-//MODULE_PASS("bs-split", BsSplitterPass())
-MODULE_PASS("bs-dispatch", BsDispatchingPass())
+MODULE_PASS("het-global", HetGlobalPass())
+//MODULE_PASS("het-split", HetSplitterPass())
+MODULE_PASS("het-dispatch", HetDispatchingPass())
 #undef MODULE_PASS
 
 #ifndef MODULE_PASS_WITH_PARAMS
@@ -433,7 +433,7 @@ FUNCTION_PASS("transform-warning", WarnMissedTransformationsPass())
 FUNCTION_PASS("tsan", ThreadSanitizerPass())
 FUNCTION_PASS("memprof", MemProfilerPass())
 FUNCTION_PASS("declare-to-assign", llvm::AssignmentTrackingPass())
-FUNCTION_PASS("bs-instrument", BsInstrumenterPass())
+FUNCTION_PASS("het-instrument", HetInstrumenterPass())
 #undef FUNCTION_PASS
 
 #ifndef FUNCTION_PASS_WITH_PARAMS

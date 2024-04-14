@@ -1,4 +1,4 @@
-#include "llvm/Transforms/Utils/BsInstrumenter.h"
+#include "llvm/Transforms/Utils/HetInstrumenter.h"
 
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/Support/CommandLine.h"
@@ -10,11 +10,11 @@
 using namespace llvm;
 using namespace std; // against llvm coding standard
 
-static cl::opt<string> InputFilename("switch-file", cl::desc("Specify input filename for bs-instrument"), cl::value_desc("filename"));
+static cl::opt<string> InputFilename("switch-file", cl::desc("Specify input filename for het-instrument"), cl::value_desc("filename"));
 
-BsInstrumenterPass::BsInstrumenterPass() : PassInfoMixin<BsInstrumenterPass>() {
+HetInstrumenterPass::HetInstrumenterPass() : PassInfoMixin<HetInstrumenterPass>() {
     if(InputFilename.compare("") == 0) {
-        errs() << "bs-instrument pass is used, but no switch-file is given!\n";
+        errs() << "het-instrument pass is used, but no switch-file is given!\n";
         errs() << "the error reporting is ugly but I do not find a better way.\n";
         report_fatal_error("");
     }
@@ -22,7 +22,7 @@ BsInstrumenterPass::BsInstrumenterPass() : PassInfoMixin<BsInstrumenterPass>() {
     // errs() << "using file " << InputFilename << "\n";
 }
 
-vector<BsInstrumenterPass::callSiteInfo> BsInstrumenterPass::readFile(string fname) {
+vector<HetInstrumenterPass::callSiteInfo> HetInstrumenterPass::readFile(string fname) {
     vector<callSiteInfo> infos;
     std::ifstream file(fname);
     std::string line;
@@ -37,7 +37,7 @@ vector<BsInstrumenterPass::callSiteInfo> BsInstrumenterPass::readFile(string fna
     return infos;
 }
 
-bool BsInstrumenterPass::requiresSwitching(Function *F, CallBase *call) const {
+bool HetInstrumenterPass::requiresSwitching(Function *F, CallBase *call) const {
     // errs() << "check " << call->getFunction()->getName() << " for call to " << F->getName() << "\n";
     for(const auto& callSite : callSitesToInstrument) {
         if(callSite.first.compare(call->getFunction()->getName().data()) == 0 &&
@@ -51,7 +51,7 @@ bool BsInstrumenterPass::requiresSwitching(Function *F, CallBase *call) const {
     return false;
 }
 
-PreservedAnalyses BsInstrumenterPass::run(Function &F, FunctionAnalysisManager &AM) {
+PreservedAnalyses HetInstrumenterPass::run(Function &F, FunctionAnalysisManager &AM) {
     LLVMContext &context = F.getContext();
     Module *module = F.getParent();
     FunctionCallee checkAndSwitch = module->getOrInsertFunction("check_and_switch", Type::getVoidTy(context));

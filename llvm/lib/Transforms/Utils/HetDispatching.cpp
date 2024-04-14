@@ -1,4 +1,4 @@
-#include "llvm/Transforms/Utils/BsDispatching.h"
+#include "llvm/Transforms/Utils/HetDispatching.h"
 
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/Support/CommandLine.h"
@@ -12,25 +12,25 @@
 using namespace llvm;
 using namespace std; // against llvm coding standard
 
-static cl::opt<string> InputFilename("variant-file", cl::desc("Specify input filename for bs-dispatch"), cl::value_desc("filename"));
+static cl::opt<string> InputFilename("variant-file", cl::desc("Specify input filename for het-dispatch"), cl::value_desc("filename"));
 static cl::opt<string> VariantName("variant", cl::desc("Specify variant to generate"), cl::value_desc("common, A, B"));
 
 
-void BsDispatchingPass::VariantingInfo::addFunction(std::string name) {
+void HetDispatchingPass::VariantingInfo::addFunction(std::string name) {
     functions.push_back(name);
 }
 
-void BsDispatchingPass::VariantingInfo::setAll() {
+void HetDispatchingPass::VariantingInfo::setAll() {
     variantAll = true;
 }
 
-bool BsDispatchingPass::VariantingInfo::isSpecialized(std::string functionName) {
+bool HetDispatchingPass::VariantingInfo::isSpecialized(std::string functionName) {
     return variantAll || any_of(functions.begin(), functions.end(),
                 [&](string funcName){return funcName.compare(functionName) == 0;});
 }
 
 
-BsDispatchingPass::BsDispatchingPass() : PassInfoMixin<BsDispatchingPass>() {
+HetDispatchingPass::HetDispatchingPass() : PassInfoMixin<HetDispatchingPass>() {
     if(VariantName.compare("common") == 0) {
         variantType = variantType_t::common;
     } else if(VariantName.compare("A") == 0) {
@@ -38,13 +38,13 @@ BsDispatchingPass::BsDispatchingPass() : PassInfoMixin<BsDispatchingPass>() {
     } else if(VariantName.compare("B") == 0) {
         variantType = variantType_t::B;
     } else {
-        errs() << "bs-split pass is used, but no split-variant or invalid value is given!\n";
+        errs() << "het-dispatch pass is used, but no split-variant or invalid value is given!\n";
         errs() << "the error reporting is ugly but I do not find a better way.\n";
         report_fatal_error("");
     }
 }
 
-BsDispatchingPass::VariantingInfo BsDispatchingPass::readFile(string fname, string moduleName) {
+HetDispatchingPass::VariantingInfo HetDispatchingPass::readFile(string fname, string moduleName) {
     VariantingInfo info;
     ifstream file(fname);
     if(!file.is_open()) {
@@ -76,12 +76,12 @@ BsDispatchingPass::VariantingInfo BsDispatchingPass::readFile(string fname, stri
     return info;
 }
 
-string BsDispatchingPass::getModuleName(const Module &M) {
+string HetDispatchingPass::getModuleName(const Module &M) {
     filesystem::path p(M.getName().data());
     return p.stem();
 }
 
-bool BsDispatchingPass::endsWith(const string& str, const string& end) {
+bool HetDispatchingPass::endsWith(const string& str, const string& end) {
     if(str.length() < end.length()) {
         return false;
     }
@@ -89,7 +89,7 @@ bool BsDispatchingPass::endsWith(const string& str, const string& end) {
     return str.compare(str.length() - end.length(), end.length(), end) == 0;
 }
 
-PreservedAnalyses BsDispatchingPass::run(Module &M, ModuleAnalysisManager &AM) {
+PreservedAnalyses HetDispatchingPass::run(Module &M, ModuleAnalysisManager &AM) {
     VariantingInfo info = readFile(InputFilename, getModuleName(M));
 
     vector<Function*> functionsToDelete;
@@ -176,7 +176,7 @@ PreservedAnalyses BsDispatchingPass::run(Module &M, ModuleAnalysisManager &AM) {
                 builder.CreateCondBr(isVariantA, bb_call_A, bb_call_B);
 
 
-                // future: only delete the body here, insert correct dispatcher in bs-instrument (either with or without check)
+                // future: only delete the body here, insert correct dispatcher in het-instrument (either with or without check)
             } else if(variantType == variantType_t::A) {
                 string newName = F.getName().data() + string("_A");
                 F.setName(newName);

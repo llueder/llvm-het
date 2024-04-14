@@ -1,5 +1,5 @@
-#ifndef LLVM_TRANSFORMS_BSDISPATCHING_H
-#define LLVM_TRANSFORMS_BSDISPATCHING_H
+#ifndef LLVM_TRANSFORMS_HETDISPATCHING_H
+#define LLVM_TRANSFORMS_HETDISPATCHING_H
 
 #include <vector>
 #include <string>
@@ -10,13 +10,13 @@
 namespace llvm {
 
 /**
-This pass is an extended version of BsSplitter, that is now unused.
+This pass is an extended version of HetSplitter, that is now unused.
 It inserts a dispatcher function for specialized functions in the common variant
 and renames the functions in the A/B variants.
 */
-class BsDispatchingPass : public PassInfoMixin<BsDispatchingPass> {
+class HetDispatchingPass : public PassInfoMixin<HetDispatchingPass> {
 public:
-    BsDispatchingPass();
+    HetDispatchingPass();
     PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
 
     // we want to run with -O0 on clang first, but this pass should run anyway
@@ -44,4 +44,4 @@ private:
 
 } /* namespace llvm */
 
-#endif /* LLVM_TRANSFORMS_BSDISPATCHING_H */
+#endif /* LLVM_TRANSFORMS_HETDISPATCHING_H */

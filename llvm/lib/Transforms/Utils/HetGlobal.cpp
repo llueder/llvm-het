@@ -1,4 +1,4 @@
-#include "llvm/Transforms/Utils/BsGlobal.h"
+#include "llvm/Transforms/Utils/HetGlobal.h"
 
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/Support/CommandLine.h"
@@ -19,10 +19,10 @@ Two problems:
    potentially not a desirable feature and will be changed in the linker.
 */
 
-BsGlobalPass::BsGlobalPass() : PassInfoMixin<BsGlobalPass>() {
+HetGlobalPass::HetGlobalPass() : PassInfoMixin<HetGlobalPass>() {
 }
 
-PreservedAnalyses BsGlobalPass::run(Module &M, ModuleAnalysisManager &AM) {
+PreservedAnalyses HetGlobalPass::run(Module &M, ModuleAnalysisManager &AM) {
     vector<GlobalVariable*> variablesToDelete;
     for(GlobalVariable& GV : M.globals()) {
         if(GV.hasInternalLinkage()) {

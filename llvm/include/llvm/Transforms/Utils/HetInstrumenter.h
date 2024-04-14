@@ -1,5 +1,5 @@
-#ifndef LLVM_TRANSFORMS_BSINSTRUMENTER_H
-#define LLVM_TRANSFORMS_BSINSTRUMENTER_H
+#ifndef LLVM_TRANSFORMS_HETINSTRUMENTER_H
+#define LLVM_TRANSFORMS_HETINSTRUMENTER_H
 
 #include <utility>
 #include <vector>
@@ -9,9 +9,9 @@
 
 namespace llvm {
 
-class BsInstrumenterPass : public PassInfoMixin<BsInstrumenterPass> {
+class HetInstrumenterPass : public PassInfoMixin<HetInstrumenterPass> {
 public:
-    BsInstrumenterPass();
+    HetInstrumenterPass();
     PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
 
     // we want to run with -O0 on clang first, but this pass should run anyway
@@ -27,4 +27,4 @@ private:
 
 } /* namespace llvm */
 
-#endif /* LLVM_TRANSFORMS_BSINSTRUMENTER_H */
+#endif /* LLVM_TRANSFORMS_HETINSTRUMENTER_H */

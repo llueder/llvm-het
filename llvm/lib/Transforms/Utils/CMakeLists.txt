@@ -5,10 +5,6 @@ add_llvm_component_library(LLVMTransformUtils
   AssumeBundleBuilder.cpp
   BasicBlockUtils.cpp
   BreakCriticalEdges.cpp
-  BsDispatching.cpp
-  BsGlobal.cpp
-  BsInstrumenter.cpp
-  BsSplitter.cpp
   BuildLibCalls.cpp
   BypassSlowDivision.cpp
   CallPromotionUtils.cpp
@@ -34,6 +30,10 @@ add_llvm_component_library(LLVMTransformUtils
   GlobalStatus.cpp
   GuardUtils.cpp
   HelloWorld.cpp
+  HetDispatching.cpp
+  HetGlobal.cpp
+  HetInstrumenter.cpp
+  HetSplitter.cpp
   InlineFunction.cpp
   InjectTLIMappings.cpp
   InstructionNamer.cpp

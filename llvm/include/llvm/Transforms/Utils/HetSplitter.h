@@ -1,5 +1,5 @@
-#ifndef LLVM_TRANSFORMS_BSSPLITTER_H
-#define LLVM_TRANSFORMS_BSSPLITTER_H
+#ifndef LLVM_TRANSFORMS_HETSPLITTER_H
+#define LLVM_TRANSFORMS_HETSPLITTER_H
 
 #include <vector>
 
@@ -8,9 +8,9 @@
 
 namespace llvm {
 
-class BsSplitterPass : public PassInfoMixin<BsSplitterPass> {
+class HetSplitterPass : public PassInfoMixin<HetSplitterPass> {
 public:
-    BsSplitterPass();
+    HetSplitterPass();
     PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
 
     // we want to run with -O0 on clang first, but this pass should run anyway
@@ -36,4 +36,4 @@ private:
 
 } /* namespace llvm */
 
-#endif /* LLVM_TRANSFORMS_BSSPLITTER_H */
+#endif /* LLVM_TRANSFORMS_HETSPLITTER_H */
