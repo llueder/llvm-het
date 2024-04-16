@@ -3,6 +3,7 @@
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Support/ErrorHandling.h"
+#include "llvm/Transforms/Utils/Cloning.h"
 
 #include <fstream>
 #include <string>
@@ -183,11 +184,20 @@ PreservedAnalyses HetDispatchingPass::run(Module &M, ModuleAnalysisManager &AM) 
 
                 // future: only delete the body here, insert correct dispatcher in het-instrument (either with or without check)
             } else if(variantType == variantType_t::A) {
+                // simple renaming would also update references, which we do not want
                 string newName = F.getName().data() + string("_A");
-                F.setName(newName);
+                ValueToValueMapTy vmap;
+                Function* clone = CloneFunction(&F, vmap);
+                clone->setName(newName);
+                F.erase(F.begin(), F.end());
+
             } else if(variantType == variantType_t::B) {
+                // simple renaming would also update references, which we do not want
                 string newName = F.getName().data() + string("_B");
-                F.setName(newName);
+                ValueToValueMapTy vmap;
+                Function* clone = CloneFunction(&F, vmap);
+                clone->setName(newName);
+                F.erase(F.begin(), F.end());
             }
         } else if(variantType != variantType_t::common) {
             // common functions are just unchanged in the common variant and deleted in the others
