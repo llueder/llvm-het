@@ -175,7 +175,6 @@ PreservedAnalyses HetDispatchingPass::run(Module &M, ModuleAnalysisManager &AM) 
                     Type* type = Type::getInt64Ty(context);
                     current_variant = new GlobalVariable(M, type, false, GlobalValue::LinkageTypes::ExternalLinkage, nullptr, "current_variant", nullptr, GlobalValue::ThreadLocalMode::GeneralDynamicTLSModel, nullopt, true);
                 }
-                Constant* variant_A = M.getOrInsertGlobal("variant_A", Type::getInt64Ty(context));
                 Type *i64_type = llvm::IntegerType::getInt64Ty(context);
                 Constant *variant_A = llvm::ConstantInt::get(i64_type, 0, true);
                 auto load_cur = builder.CreateLoad(Type::getInt64Ty(context), current_variant);
