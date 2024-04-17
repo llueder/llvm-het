@@ -169,8 +169,8 @@ PreservedAnalyses HetDispatchingPass::run(Module &M, ModuleAnalysisManager &AM) 
 
                 BasicBlock* bb_decider = BasicBlock::Create(context, "bb_decider", &F, bb_call_B);
                 IRBuilder<> builder(bb_decider);
-                FunctionCallee checkAndSwitch = M.getOrInsertFunction("check_and_switch", Type::getVoidTy(context));
-                builder.CreateCall(checkAndSwitch);
+//                FunctionCallee checkAndSwitch = M.getOrInsertFunction("check_and_switch", Type::getVoidTy(context));
+//                builder.CreateCall(checkAndSwitch);
                 if(current_variant == nullptr) {
                     Type* type = Type::getInt64Ty(context);
                     current_variant = new GlobalVariable(M, type, false, GlobalValue::LinkageTypes::ExternalLinkage, nullptr, "current_variant", nullptr, GlobalValue::ThreadLocalMode::GeneralDynamicTLSModel, nullopt, true);
